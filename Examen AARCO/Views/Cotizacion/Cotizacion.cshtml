@@ -1,7 +1,57 @@
-﻿
+﻿@model Examen_AARCO.Models.Cotizacion
+
 @{
     ViewData["Title"] = "Cotizacion";
 }
 
-<h1>Cotizacion</h1>
+
+    <p class="fs-4 fw-bold text-center mt-0 mb-3">Datos de vehículo</p>
+
+    <div class="contenido_form" >
+        <div class="input-group mt-3">
+            @Html.LabelFor(model => model.Marca, htmlAttributes: new { @class = "input-group-text w-25"})
+            <select class="form-select"  id="slctMarca"></select>
+        </div>
+        <div class="input-group mt-3">
+            @Html.LabelFor(model => model.SubMarca, htmlAttributes: new { @class = "input-group-text w-25"})
+            <select class="form-select" id="slctSubMarca"></select>
+        </div>
+        <div class="input-group mt-3">
+            @Html.LabelFor(model => model.Modelo, htmlAttributes: new { @class = "input-group-text w-25"})
+            <select class="form-select" id="slctModelo"></select>
+        </div>
+        <div class="input-group mt-3">
+            @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "input-group-text w-25"})
+            <select class="form-select" id="slctDescripcion"></select>
+        </div>
+
+    </div>
+
+    <p class="fs-4 fw-bold text-center my-3" >Domicilio</p>
+
+    <div class="contenido_form mt-3" >
+        <div class="form-floating mt-3" > 
+            <div class="input-group">
+                <span class="input-group-text w-25">Codigo Postal:</span>
+                @Html.EditorFor(model => model.CP,new { htmlAttributes = new { @class = "form-control", id = "txtCP", name = "Codigo Postal", placeholder="Ingrese su codigo postal",
+                maxlength="5"}})
+            </div>
+
+            <div class="input-group mt-3">
+                <span class="input-group-text w-25">Estado:</span>
+                @Html.EditorFor(model => model.Estado,new { htmlAttributes = new { @class = "form-control", id = "txtEstado", name = "Estado", placeholder="Estado", @disabled = "disabled"}})
+            </div>
+
+            <div class="input-group mt-3">
+                <span class="input-group-text w-25">Municipio:</span>
+                @Html.EditorFor(model => model.Municipio,new { htmlAttributes = new { @class = "form-control", id = "txtMunicipio", name = "Municipio", placeholder="Municipio", @disabled = "disabled"}})
+            </div>
+
+            <div class="input-group mt-3">
+                @Html.LabelFor(model => model.Colonia, htmlAttributes: new { @class = "input-group-text w-25"})
+                <select class="form-select" id="slctColonia"></select>
+            </div>
+        </div>
+
+    <div class="mt-3" ><button type="button" class="btn btn-primary d-block btn-lg mx-auto" >Cotizar</button></div></div>
 
