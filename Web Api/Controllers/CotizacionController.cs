@@ -20,12 +20,12 @@ namespace Web_Api.Controllers
 
         }
 
-        [Route("api/Cotizacion")]
+        [Route("api/Marcas")]
         public RespuestaJson Obtenermarcas()
         {
             cnn = new ConexionSQL();
 
-            var query = "SELECT [IDAuto],[Marca] FROM[Examen_AARCO].[dbo].[ListaDeAutos]";
+            var query = "SELECT  * FROM [Examen_AARCO].[dbo].[MarcaAutos]";
             DataSet datos = cnn.Conexion(query);
             List<Cotizacion> cotizacion = new List<Cotizacion>();
 
@@ -36,8 +36,104 @@ namespace Web_Api.Controllers
                 {
                     cotizacion.Add(new Cotizacion
                     {
-                        IDAuto = int.Parse(itemmarcas[0].ToString()),
+                        ID = int.Parse(itemmarcas[0].ToString()),
                         Marca = itemmarcas[1].ToString()
+                    });
+                }
+                Respuesta.Data = cotizacion;
+                Respuesta.Estatus = EstatusRespuestaJSON.OK;
+                Respuesta.Mensaje = "";
+            }
+            else
+            {
+                Respuesta.Data = null;
+                Respuesta.Estatus = EstatusRespuestaJSON.ERROR;
+                Respuesta.Mensaje = "Ocurrio un error al consultar los datos, intentelo nuevamente, si el error persiste contacte con el administrador del sistema.";
+            }
+            return Respuesta;
+        }
+        [Route("api/SubMarcas")]
+        public RespuestaJson Obtenersubmarcas(Cotizacion dtos)
+        {
+            cnn = new ConexionSQL();
+
+            var query = "SELECT  * FROM [Examen_AARCO].[dbo].[SubMarcaAutos] where [IDMarca] = '"+ dtos.Marca + "'";
+            DataSet datos = cnn.Conexion(query);
+            List<Cotizacion> cotizacion = new List<Cotizacion>();
+
+
+            if (datos.Tables.Count > 0)
+            {
+                foreach (DataRow itemmarcas in datos.Tables[0].Rows)
+                {
+                    cotizacion.Add(new Cotizacion
+                    {
+                        ID = int.Parse(itemmarcas[0].ToString()),
+                        SubMarca = itemmarcas[1].ToString()
+                    });
+                }
+                Respuesta.Data = cotizacion;
+                Respuesta.Estatus = EstatusRespuestaJSON.OK;
+                Respuesta.Mensaje = "";
+            }
+            else
+            {
+                Respuesta.Data = null;
+                Respuesta.Estatus = EstatusRespuestaJSON.ERROR;
+                Respuesta.Mensaje = "Ocurrio un error al consultar los datos, intentelo nuevamente, si el error persiste contacte con el administrador del sistema.";
+            }
+            return Respuesta;
+        }
+        [Route("api/Modelos")]
+        public RespuestaJson Obtenermodelos(Cotizacion dtos)
+        {
+            cnn = new ConexionSQL();
+
+            var query = "SELECT  * FROM [Examen_AARCO].[dbo].[ModeloAutos] where IDSubMarca = '" + dtos.SubMarca + "'"; 
+            DataSet datos = cnn.Conexion(query);
+            List<Cotizacion> cotizacion = new List<Cotizacion>();
+
+
+            if (datos.Tables.Count > 0)
+            {
+                foreach (DataRow itemmarcas in datos.Tables[0].Rows)
+                {
+                    cotizacion.Add(new Cotizacion
+                    {
+                        ID = int.Parse(itemmarcas[0].ToString()),
+                        Modelo = itemmarcas[1].ToString()
+                    });
+                }
+                Respuesta.Data = cotizacion;
+                Respuesta.Estatus = EstatusRespuestaJSON.OK;
+                Respuesta.Mensaje = "";
+            }
+            else
+            {
+                Respuesta.Data = null;
+                Respuesta.Estatus = EstatusRespuestaJSON.ERROR;
+                Respuesta.Mensaje = "Ocurrio un error al consultar los datos, intentelo nuevamente, si el error persiste contacte con el administrador del sistema.";
+            }
+            return Respuesta;
+        }
+        [Route("api/Descipcion")]
+        public RespuestaJson ObtenerDescipcion(Cotizacion dtos)
+        {
+            cnn = new ConexionSQL();
+
+            var query = "SELECT  * FROM [Examen_AARCO].[dbo].[DescripcionAutos] where IDModelo = '" + dtos.SubMarca + "'";
+            DataSet datos = cnn.Conexion(query);
+            List<Cotizacion> cotizacion = new List<Cotizacion>();
+
+
+            if (datos.Tables.Count > 0)
+            {
+                foreach (DataRow itemmarcas in datos.Tables[0].Rows)
+                {
+                    cotizacion.Add(new Cotizacion
+                    {
+                        ID = int.Parse(itemmarcas[0].ToString()),
+                        Descripcion = itemmarcas[1].ToString()
                     });
                 }
                 Respuesta.Data = cotizacion;

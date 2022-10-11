@@ -3,7 +3,12 @@
 @{
     ViewData["Title"] = "Cotizacion";
 }
-
+<script nonce=EDNnf03nceIOfn39fn3e9h3sdfa>
+        $(document).ready(function () {
+            var lstCats = @Html.Raw(Json.Serialize(ViewBag.MsjCode));
+            APP.init(lstCats);
+         });
+</script>
 
     <p class="fs-4 fw-bold text-center mt-0 mb-3">Datos de vehículo</p>
 

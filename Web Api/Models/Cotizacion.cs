@@ -4,7 +4,7 @@ namespace Web_Api.Models
 {
     public class Cotizacion
     {
-        public int IDAuto { get; set; }
+        public int ID { get; set; }
         public string Marca { get; set; }
         public string SubMarca { get; set; }
         public string Modelo { get; set; }
