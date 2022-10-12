@@ -15,7 +15,7 @@ namespace Web_Api.Models
 
 
                 SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-                builder.DataSource = "JDEAT\\SQLEXPRESS";
+                builder.DataSource = "JHOVANGALLARDO\\SQLEXPRESS";
                 builder.UserID = "sa";
                 builder.Password = "JDeat5577";
                 builder.InitialCatalog = "Examen_AARCO";

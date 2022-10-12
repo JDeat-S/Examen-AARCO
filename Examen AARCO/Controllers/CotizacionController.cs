@@ -24,30 +24,38 @@ namespace AARCO.Controllers
         public async Task<IActionResult> Cotizacion()
         {
             string Serviciosconsulta = URLbase + "/Marcas";
-                var response = await client.GetAsync(Serviciosconsulta);
+            var response = await client.GetAsync(Serviciosconsulta);
             string apiResponse = await response.Content.ReadAsStringAsync();
 
             ViewBag.MsjCode = apiResponse;
             return View();
         }
-        public async Task<IActionResult> ObtieneSubMarcas(string marca)
+
+        public async Task<IActionResult> ObtieneSubMarcas([FromBody] Cotizacion dtos)
         {
             try
             {
                 var input = new
                 {
-                    Marca = marca
+                    Marca = dtos.Marca,
+                    CP = "null",
+                    Estado = "null",
+                    Modelo = "null",
+                    Colonia = "null",
+                    SubMarca = "null",
+                    Municipio = "null",
+                    Descripcion = "null",
+                    DescripcionId = "null"
+
                 };
 
                 string jsonser = JsonConvert.SerializeObject(input);
                 string Serviciosconsulta = URLbase + "/SubMarcas";
                 var response = await client.PostAsync(Serviciosconsulta, new StringContent(jsonser, Encoding.UTF8, "application/json"));
                 string apiResponse = await response.Content.ReadAsStringAsync();
-                Cotizacion result = (new JavaScriptSerializer()).Deserialize<Cotizacion>(apiResponse);
+                
 
-                Respuesta.Data = result;
-
-                return Json(Respuesta);
+                return Json(apiResponse);
             }
             catch (Exception ex)
             {
@@ -57,24 +65,30 @@ namespace AARCO.Controllers
                 return Json(Respuesta);
             }
         }
-        public async Task<ActionResult> ObtieneModelos(Cotizacion dtos)
+        public async Task<ActionResult> ObtieneModelos([FromBody] Cotizacion dtos)
         {
             try
             {
                 var input = new
                 {
-                    Modelo = dtos.Modelo
+                    Modelo = "null",
+                    Marca = "null",
+                    CP = "null",
+                    Estado = "null",
+                    Colonia = "null",
+                    SubMarca = dtos.SubMarca,
+                    Municipio = "null",
+                    Descripcion = "null",
+                    DescripcionId = "null"
+
                 };
 
                 string jsonser = JsonConvert.SerializeObject(input);
                 string Serviciosconsulta = URLbase + "/Modelos";
                 var response = await client.PostAsync(Serviciosconsulta, new StringContent(jsonser, Encoding.UTF8, "application/json"));
                 string apiResponse = await response.Content.ReadAsStringAsync();
-                Cotizacion result = (new JavaScriptSerializer()).Deserialize<Cotizacion>(apiResponse);
 
-                Respuesta.Data = result;
-
-                return Json(Respuesta);
+                return Json(apiResponse);
             }
             catch (Exception ex)
             {
@@ -84,24 +98,30 @@ namespace AARCO.Controllers
                 return Json(Respuesta);
             }
         }
-        public async Task<ActionResult> ObtieneDescipcion(Cotizacion dtos)
+        public async Task<ActionResult> ObtieneDescipcion([FromBody] Cotizacion dtos)
         {
             try
             {
                 var input = new
                 {
-                    Descripcion = dtos.Descripcion
+                    Descripcion = "null",
+                    Marca = "null",
+                    CP = "null",
+                    Estado = "null",
+                    Modelo = dtos.Modelo,
+                    Colonia = "null",
+                    SubMarca = "null",
+                    Municipio = "null",
+                    DescripcionId = "null"
+
                 };
 
                 string jsonser = JsonConvert.SerializeObject(input);
                 string Serviciosconsulta = URLbase + "/Descipcion";
                 var response = await client.PostAsync(Serviciosconsulta, new StringContent(jsonser, Encoding.UTF8, "application/json"));
                 string apiResponse = await response.Content.ReadAsStringAsync();
-                Cotizacion result = (new JavaScriptSerializer()).Deserialize<Cotizacion>(apiResponse);
-
-                Respuesta.Data = result;
-
-                return Json(Respuesta);
+                
+                return Json(apiResponse);
             }
             catch (Exception ex)
             {
@@ -110,6 +130,34 @@ namespace AARCO.Controllers
                 ViewBag.Msj = Respuesta.Estatus + "," + Respuesta.Mensaje;
                 return Json(Respuesta);
             }
+        }
+        public async Task<IActionResult> ObtenerCP([FromBody] Cotizacion dtos)
+        {
+            string Serviciosconsulta = "https://api-test.aarco.com.mx/api-examen/api/examen/sepomex/"+ dtos.CP;
+            var response = await client.GetAsync(Serviciosconsulta);
+            string apiResponse = await response.Content.ReadAsStringAsync();
+
+            return Json(apiResponse);
+        }
+        public async Task<IActionResult> Peticion([FromBody] Cotizacion dtos)
+        {
+            var input = new
+            {
+
+                DescripcionId = dtos.DescripcionId
+
+            };
+
+            string jsonser = JsonConvert.SerializeObject(input);
+            string Serviciosconsulta = "https://api-test.aarco.com.mx/api-examen/api/examen/crear-peticion";
+            var response = await client.PostAsync(Serviciosconsulta, new StringContent(jsonser, Encoding.UTF8, "application/json"));
+            string apiResponse = await response.Content.ReadAsStringAsync();
+             Serviciosconsulta = "https://api-test.aarco.com.mx/api-examen/api/examen/peticion/" + apiResponse.Replace("\"", ""); 
+             response = await client.GetAsync(Serviciosconsulta);
+             apiResponse = await response.Content.ReadAsStringAsync();
+
+
+            return Json(apiResponse);
         }
     }
 }

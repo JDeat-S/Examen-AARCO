@@ -9,6 +9,7 @@ namespace Web_Api.Models
         public string SubMarca { get; set; }
         public string Modelo { get; set; }
         public string Descripcion { get; set; }
+        public string DescripcionId { get; set; }
         public  string CP { get; set; }
         public  string Estado { get; set; }
         public string Municipio { get; set; }

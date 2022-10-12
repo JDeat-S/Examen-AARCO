@@ -52,8 +52,10 @@ namespace Web_Api.Controllers
             }
             return Respuesta;
         }
+
+        [HttpPost]
         [Route("api/SubMarcas")]
-        public RespuestaJson Obtenersubmarcas(Cotizacion dtos)
+        public RespuestaJson Obtenersubmarcas([FromBody]Cotizacion dtos)
         {
             cnn = new ConexionSQL();
 
@@ -69,7 +71,7 @@ namespace Web_Api.Controllers
                     cotizacion.Add(new Cotizacion
                     {
                         ID = int.Parse(itemmarcas[0].ToString()),
-                        SubMarca = itemmarcas[1].ToString()
+                        SubMarca = itemmarcas[2].ToString()
                     });
                 }
                 Respuesta.Data = cotizacion;
@@ -101,7 +103,7 @@ namespace Web_Api.Controllers
                     cotizacion.Add(new Cotizacion
                     {
                         ID = int.Parse(itemmarcas[0].ToString()),
-                        Modelo = itemmarcas[1].ToString()
+                        Modelo = itemmarcas[2].ToString()
                     });
                 }
                 Respuesta.Data = cotizacion;
@@ -121,7 +123,7 @@ namespace Web_Api.Controllers
         {
             cnn = new ConexionSQL();
 
-            var query = "SELECT  * FROM [Examen_AARCO].[dbo].[DescripcionAutos] where IDModelo = '" + dtos.SubMarca + "'";
+            var query = "SELECT  * FROM [Examen_AARCO].[dbo].[DescripcionAutos] where IDModelo = '" + dtos.Modelo + "'";
             DataSet datos = cnn.Conexion(query);
             List<Cotizacion> cotizacion = new List<Cotizacion>();
 
@@ -132,8 +134,8 @@ namespace Web_Api.Controllers
                 {
                     cotizacion.Add(new Cotizacion
                     {
-                        ID = int.Parse(itemmarcas[0].ToString()),
-                        Descripcion = itemmarcas[1].ToString()
+                        DescripcionId = itemmarcas[3].ToString(),
+                        Descripcion = itemmarcas[2].ToString()
                     });
                 }
                 Respuesta.Data = cotizacion;

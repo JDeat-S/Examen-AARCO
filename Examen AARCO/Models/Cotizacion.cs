@@ -12,6 +12,7 @@ namespace Examen_AARCO.Models
         public string Modelo { get; set; }
         [Display(Name = "Descripcion: ")]
         public string Descripcion { get; set; }
+        public string DescripcionId { get; set; }
         public  string CP { get; set; }
         public  string Estado { get; set; }
         [Display(Name = "Municipio: ")]
