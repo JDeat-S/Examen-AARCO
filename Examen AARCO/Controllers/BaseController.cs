@@ -25,8 +25,8 @@ namespace Examen_AARCO.Controllers
     public class RespuestaJson
     {
         public EstatusRespuestaJSON Estatus { get; set; }
-        public string mensaje { get; set; }
-        public object data { get; set; }
+        public string Mensaje { get; set; }
+        public object Data { get; set; }
         public string Summary { get; set; }
     }
 }

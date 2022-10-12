@@ -2,16 +2,17 @@
 using Examen_AARCO.Models;
 using Microsoft.AspNetCore.Mvc;
 using Nancy.Json;
+using Newtonsoft.Json;
 using System.Text;
 
 namespace AARCO.Controllers
 {
     public class CotizacionController : BaseController
     {
-        private readonly ILogger<CotizacionController> _logger;
-        private readonly IConfiguration _config;
+        public readonly ILogger<CotizacionController> _logger;
+        public readonly IConfiguration _config;
         static HttpClient client = new HttpClient();
-        private readonly string URLbase;
+        public readonly string URLbase;
 
         public CotizacionController(ILogger<CotizacionController> logger, IConfiguration config)
         {
@@ -20,62 +21,94 @@ namespace AARCO.Controllers
             URLbase = _config.GetValue<string>("ServicesUrl:WebApi");
         }
 
-        public async Task<IActionResult> CotizacionAsync()
+        public async Task<IActionResult> Cotizacion()
         {
             string Serviciosconsulta = URLbase + "/Marcas";
-            var response = await client.GetAsync(Serviciosconsulta);
+                var response = await client.GetAsync(Serviciosconsulta);
             string apiResponse = await response.Content.ReadAsStringAsync();
 
             ViewBag.MsjCode = apiResponse;
             return View();
         }
-
-        private ActionResult ObtieneUsuarios(Cotizacion dtos)
+        public async Task<IActionResult> ObtieneSubMarcas(string marca)
         {
             try
             {
                 var input = new
                 {
-                    Usuario = usuario,
-                    iduser = iduser,
+                    Marca = marca
                 };
 
-                string inputJson = (new JavaScriptSerializer()).Serialize(input);
-                WebClient client = new WebClient();
-                client.Headers["Content-type"] = "application/json";
-                client.Encoding = Encoding.UTF8;
-                client.Headers.Add("Authorization", "Bearer " + Usuario.Token);
-                string json = client.UploadString(urlAPIS + "/Usuarios", "POST", inputJson);
-                var LstSerialize = new JavaScriptSerializer();
-                RespuestaJson result = (new JavaScriptSerializer()).Deserialize<RespuestaJson>(json);
+                string jsonser = JsonConvert.SerializeObject(input);
+                string Serviciosconsulta = URLbase + "/SubMarcas";
+                var response = await client.PostAsync(Serviciosconsulta, new StringContent(jsonser, Encoding.UTF8, "application/json"));
+                string apiResponse = await response.Content.ReadAsStringAsync();
+                Cotizacion result = (new JavaScriptSerializer()).Deserialize<Cotizacion>(apiResponse);
 
-                if (result.Estatus == EstatusRespuestaJSON.OK)
-                {
-                    ViewBag.usuario = LstSerialize.Serialize(result.Data);
-                }
-                else if (result.Estatus == EstatusRespuestaJSON.LOGIN)
-                {
-                    Respuesta.Estatus = result.Estatus;
-                    Respuesta.Mensaje = result.Mensaje;
+                Respuesta.Data = result;
 
-                }
-                else if (result.Estatus == EstatusRespuestaJSON.SIN_RESPUESTA)
-                {
-                    Respuesta.Estatus = result.Estatus;
-                    Respuesta.Mensaje = result.Mensaje;
-                }
-
-
-
-
-                return Json(Respuesta, JsonRequestBehavior.AllowGet);
+                return Json(Respuesta);
             }
             catch (Exception ex)
             {
                 Respuesta.Estatus = EstatusRespuestaJSON.ERROR;
                 Respuesta.Mensaje = "Ocurrio un error al consultar la información, verifica tu conexión";
                 ViewBag.Msj = Respuesta.Estatus + "," + Respuesta.Mensaje;
-                return Json(Respuesta, JsonRequestBehavior.AllowGet);
+                return Json(Respuesta);
+            }
+        }
+        public async Task<ActionResult> ObtieneModelos(Cotizacion dtos)
+        {
+            try
+            {
+                var input = new
+                {
+                    Modelo = dtos.Modelo
+                };
+
+                string jsonser = JsonConvert.SerializeObject(input);
+                string Serviciosconsulta = URLbase + "/Modelos";
+                var response = await client.PostAsync(Serviciosconsulta, new StringContent(jsonser, Encoding.UTF8, "application/json"));
+                string apiResponse = await response.Content.ReadAsStringAsync();
+                Cotizacion result = (new JavaScriptSerializer()).Deserialize<Cotizacion>(apiResponse);
+
+                Respuesta.Data = result;
+
+                return Json(Respuesta);
+            }
+            catch (Exception ex)
+            {
+                Respuesta.Estatus = EstatusRespuestaJSON.ERROR;
+                Respuesta.Mensaje = "Ocurrio un error al consultar la información, verifica tu conexión";
+                ViewBag.Msj = Respuesta.Estatus + "," + Respuesta.Mensaje;
+                return Json(Respuesta);
+            }
+        }
+        public async Task<ActionResult> ObtieneDescipcion(Cotizacion dtos)
+        {
+            try
+            {
+                var input = new
+                {
+                    Descripcion = dtos.Descripcion
+                };
+
+                string jsonser = JsonConvert.SerializeObject(input);
+                string Serviciosconsulta = URLbase + "/Descipcion";
+                var response = await client.PostAsync(Serviciosconsulta, new StringContent(jsonser, Encoding.UTF8, "application/json"));
+                string apiResponse = await response.Content.ReadAsStringAsync();
+                Cotizacion result = (new JavaScriptSerializer()).Deserialize<Cotizacion>(apiResponse);
+
+                Respuesta.Data = result;
+
+                return Json(Respuesta);
+            }
+            catch (Exception ex)
+            {
+                Respuesta.Estatus = EstatusRespuestaJSON.ERROR;
+                Respuesta.Mensaje = "Ocurrio un error al consultar la información, verifica tu conexión";
+                ViewBag.Msj = Respuesta.Estatus + "," + Respuesta.Mensaje;
+                return Json(Respuesta);
             }
         }
     }
